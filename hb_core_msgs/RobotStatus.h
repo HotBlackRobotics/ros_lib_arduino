@@ -22,8 +22,10 @@ namespace hb_core_msgs
       _temperature_type temperature;
       typedef int16_t _lux_type;
       _lux_type lux;
-      typedef int16_t _battery_type;
-      _battery_type battery;
+      typedef int16_t _battery_current_type;
+      _battery_current_type battery_current;
+      typedef int16_t _battery_voltage_type;
+      _battery_voltage_type battery_voltage;
 
     RobotStatus():
       current_dx(0),
@@ -31,7 +33,8 @@ namespace hb_core_msgs
       distance(0),
       temperature(0),
       lux(0),
-      battery(0)
+      battery_current(0),
+      battery_voltage(0)
     {
     }
 
@@ -81,11 +84,19 @@ namespace hb_core_msgs
       union {
         int16_t real;
         uint16_t base;
-      } u_battery;
-      u_battery.real = this->battery;
-      *(outbuffer + offset + 0) = (u_battery.base >> (8 * 0)) & 0xFF;
-      *(outbuffer + offset + 1) = (u_battery.base >> (8 * 1)) & 0xFF;
-      offset += sizeof(this->battery);
+      } u_battery_current;
+      u_battery_current.real = this->battery_current;
+      *(outbuffer + offset + 0) = (u_battery_current.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_battery_current.base >> (8 * 1)) & 0xFF;
+      offset += sizeof(this->battery_current);
+      union {
+        int16_t real;
+        uint16_t base;
+      } u_battery_voltage;
+      u_battery_voltage.real = this->battery_voltage;
+      *(outbuffer + offset + 0) = (u_battery_voltage.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_battery_voltage.base >> (8 * 1)) & 0xFF;
+      offset += sizeof(this->battery_voltage);
       return offset;
     }
 
@@ -140,17 +151,26 @@ namespace hb_core_msgs
       union {
         int16_t real;
         uint16_t base;
-      } u_battery;
-      u_battery.base = 0;
-      u_battery.base |= ((uint16_t) (*(inbuffer + offset + 0))) << (8 * 0);
-      u_battery.base |= ((uint16_t) (*(inbuffer + offset + 1))) << (8 * 1);
-      this->battery = u_battery.real;
-      offset += sizeof(this->battery);
+      } u_battery_current;
+      u_battery_current.base = 0;
+      u_battery_current.base |= ((uint16_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_battery_current.base |= ((uint16_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      this->battery_current = u_battery_current.real;
+      offset += sizeof(this->battery_current);
+      union {
+        int16_t real;
+        uint16_t base;
+      } u_battery_voltage;
+      u_battery_voltage.base = 0;
+      u_battery_voltage.base |= ((uint16_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_battery_voltage.base |= ((uint16_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      this->battery_voltage = u_battery_voltage.real;
+      offset += sizeof(this->battery_voltage);
      return offset;
     }
 
     const char * getType(){ return "hb_core_msgs/RobotStatus"; };
-    const char * getMD5(){ return "5cf938022620f390b578e4fbe03fe155"; };
+    const char * getMD5(){ return "295b409ea6b82880f4e069fc131b2062"; };
 
   };
 
